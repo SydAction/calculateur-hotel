@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0f766e">
+<title>Deal Checker Costa Rica</title>
+<style>
+:root{
+  --bg:#f4f6f8;--card:#fff;--ink:#111827;--mut:#5b6472;--pri:#0f766e;--priInk:#fff;
+  --line:#e2e6ea;--red:#b91c1c;--org:#b45309;--grn:#15803d;--soft:#eef2f5;--warn:#fff7ed;--warnInk:#7c2d12;
+}
+@media (prefers-color-scheme:dark){
+  :root{--bg:#0e1316;--card:#171e23;--ink:#eef2f5;--mut:#9aa6b2;--pri:#14b8a6;--priInk:#06201d;
+  --line:#2a343b;--soft:#1f282e;--warn:#3a2a14;--warnInk:#fed7aa}
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);
+  font:16px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Helvetica,Arial,sans-serif}
+#app{max-width:640px;margin:0 auto;padding:16px;padding-bottom:calc(32px + env(safe-area-inset-bottom))}
+h1{font-size:1.7rem;line-height:1.15;margin:8px 0 4px}
+h2{font-size:1.35rem;line-height:1.25;margin:16px 0 6px}
+h3{font-size:1.05rem;margin:20px 0 8px}
+p{margin:6px 0}
+.mut{color:var(--mut)}
+.small{font-size:.88rem}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;margin:12px 0}
+.btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;min-height:52px;padding:12px 16px;
+  border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);
+  font:inherit;font-weight:650;cursor:pointer;text-align:center}
+.btn:active{transform:scale(.985)}
+.btn.pri{background:var(--pri);color:var(--priInk);border-color:transparent}
+.btn.ghost{background:transparent}
+.btn.danger{color:var(--red)}
+.btn.sm{min-height:44px;width:auto;padding:8px 14px;font-size:.92rem}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.row>.btn{flex:1 1 140px}
+.big{min-height:84px;flex-direction:column;font-size:1.15rem}
+.big small{font-weight:400;color:var(--mut)}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:8px}
+.back{min-height:44px;min-width:44px;border-radius:12px;border:1px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-size:1.2rem;cursor:pointer}
+.prog{flex:1}
+.prog .lbl{font-size:.85rem;color:var(--mut);margin-bottom:4px}
+.bar{height:8px;background:var(--soft);border-radius:99px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--pri);border-radius:99px;transition:width .2s}
+.field{margin:14px 0}
+.field label{display:block;font-weight:650;margin-bottom:6px}
+.inp{display:flex;align-items:center;border:2px solid var(--line);border-radius:12px;background:var(--card);overflow:hidden}
+.inp:focus-within{border-color:var(--pri)}
+.inp input{flex:1;min-width:0;border:0;outline:0;background:transparent;color:inherit;font:inherit;font-size:1.25rem;padding:14px}
+.inp span{padding:0 14px;color:var(--mut);font-weight:650}
+.hint{font-size:.86rem;color:var(--mut);margin-top:6px}
+.err{color:var(--red);font-weight:650;margin:10px 0;min-height:1.2em}
+.warnbox{background:var(--warn);color:var(--warnInk);border-radius:10px;padding:10px 12px;margin:10px 0;font-size:.92rem}
+.seg{display:flex;gap:8px;margin:12px 0}
+.seg button{flex:1;min-height:48px;border-radius:12px;border:2px solid var(--line);background:var(--card);color:var(--ink);font:inherit;font-weight:650;cursor:pointer}
+.seg button.on{border-color:var(--pri);background:var(--pri);color:var(--priInk)}
+.yn{display:grid;gap:10px;margin-top:14px}
+.yn .btn{min-height:60px;font-size:1.1rem}
+.yn .btn.on{outline:3px solid var(--pri)}
+.verdict{border-radius:16px;padding:18px;margin:12px 0;color:#fff}
+.verdict.red{background:var(--red)}.verdict.orange{background:var(--org)}.verdict.green{background:var(--grn)}
+.verdict .lvl{font-size:1.9rem;font-weight:800;letter-spacing:.02em;line-height:1.1}
+.verdict .sub{font-size:1.02rem;margin-top:4px}
+.pts{list-style:none;margin:0;padding:0}
+.pts li{padding:10px 0 10px 34px;border-bottom:1px solid var(--line);position:relative}
+.pts li:last-child{border-bottom:0}
+.pts li::before{content:"";position:absolute;left:4px;top:15px;width:18px;height:18px;border-radius:50%}
+.pts li.red::before{background:var(--red)}.pts li.orange::before{background:var(--org)}
+.offer{border:2px solid var(--pri)}
+.offer .v{font-size:1.8rem;font-weight:800}
+.ind{padding:12px 0;border-bottom:1px solid var(--line)}
+.ind:last-child{border-bottom:0}
+.ind .k{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.ind .k b{font-size:1.02rem}
+.ind .k .val{font-size:1.2rem;font-weight:800;white-space:nowrap}
+.ind .ex{color:var(--mut);font-size:.88rem;margin-top:2px}
+.item{display:flex;align-items:center;gap:12px}
+.item .grow{flex:1;min-width:0}
+.item .grow b{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dot{display:inline-block;width:12px;height:12px;border-radius:50%;margin-right:6px;vertical-align:baseline}
+.dot.red{background:var(--red)}.dot.orange{background:var(--org)}.dot.green{background:var(--grn)}
+.chk{width:26px;height:26px;accent-color:var(--pri)}
+.tbl{overflow-x:auto;border:1px solid var(--line);border-radius:12px;background:var(--card)}
+.tbl table{border-collapse:collapse;width:100%;min-width:100%}
+.tbl th,.tbl td{padding:10px 12px;border-bottom:1px solid var(--line);text-align:right;vertical-align:top;font-size:.93rem}
+.tbl th:first-child,.tbl td:first-child{text-align:left;position:sticky;left:0;background:var(--card);font-weight:650;min-width:120px}
+.tbl thead th{font-weight:800;background:var(--soft)}
+.tbl tr:last-child td{border-bottom:0}
+.tag{display:inline-block;padding:3px 10px;border-radius:99px;color:#fff;font-weight:800;font-size:.8rem}
+.tag.red{background:var(--red)}.tag.orange{background:var(--org)}.tag.green{background:var(--grn)}
+.toast{position:fixed;left:50%;transform:translateX(-50%);bottom:calc(20px + env(safe-area-inset-bottom));background:#111827;color:#fff;padding:12px 18px;border-radius:12px;z-index:9;max-width:90vw;font-size:.95rem}
+.recap{display:none}
+.recap table{width:100%;border-collapse:collapse;font-size:.92rem}
+.recap td{padding:5px 8px;border-bottom:1px solid #ccc;vertical-align:top}
+.recap td:last-child{text-align:right;font-weight:600}
+.disc{font-size:.82rem;color:var(--mut);margin-top:24px}
+.printhead{display:none}
+@media print{
+  :root{--bg:#fff;--card:#fff;--ink:#000;--mut:#444;--line:#bbb;--soft:#eee}
+  body{background:#fff;color:#000;font-size:11pt}
+  #app{max-width:none;padding:0}
+  .noprint,.toast{display:none!important}
+  .recap{display:block!important}
+  .printhead{display:block}
+  .card,.verdict{break-inside:avoid}
+  .verdict,.tag,.dot,.pts li::before{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+  .tbl{overflow:visible}
+}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+/* ==== CORE START (pur : calculs et verdict, aucun accès au DOM) ==== */
+function num(v){
+  if(v===undefined||v===null)return null;
+  var s=String(v).replace(/\s/g,'').replace(',','.');
+  if(s==='')return null;
+  var n=Number(s);
+  return isFinite(n)?n:NaN;
+}
+function nums(d){
+  var o={},k,n;
+  for(k in d){
+    if(k==='name'||k==='chMode'){o[k]=d[k];continue}
+    n=num(d[k]);
+    o[k]=(n===null||isNaN(n))?0:n;
+  }
+  return o;
+}
+function r2(x){return Math.round(x*100)/100}
+function mensualite(P,ratePct,years){
+  var n=Math.round(years*12),r=ratePct/100/12;
+  if(!(P>0)||!(n>0))return 0;
+  if(r===0)return P/n;
+  return P*r/(1-Math.pow(1+r,-n));
+}
+function calcHotel(n){
+  var occ=n.occ/100;
+  var rev=n.chambres*365*n.adr*occ+n.autres;
+  var revpar=n.adr*occ;
+  var charges=n.chMode==='usd'?n.chUsd:rev*n.chPct/100;
+  var reserve=rev*n.reserve/100;
+  var noi=rev-charges-reserve;
+  var fees=n.prix*n.frais/100;
+  var cost=n.prix+fees+n.travaux;
+  var loan=Math.max(0,cost-n.apport);
+  var pay=mensualite(loan,n.taux,n.duree);
+  var cf=noi-pay*12;
+  var max10=noi>0?noi/0.10:null;
+  var max12=noi>0?noi/0.12:null;
+  return{type:'hotel',rev:rev,revpar:revpar,charges:charges,reserve:reserve,noi:noi,
+    cap:noi/n.prix,max10:max10,max12:max12,fees:fees,cost:cost,loan:loan,pay:pay,
+    cf:cf,roe:n.apport>0?cf/n.apport:null,
+    payback:(cf>0&&n.apport>0)?n.apport/cf:null,
+    offer:max10,income:rev,net:noi,metric:noi/n.prix,prix:n.prix,apport:n.apport,occ:n.occ};
+}
+function calcVilla(n){
+  var occ=n.occ/100;
+  var gross=365*occ*n.adr;
+  var stays=n.duree>0?(365*occ)/n.duree:0;
+  var mgmt=gross*n.gestion/100;
+  var clean=stays*n.menage;
+  var charges=n.elec+n.eau+n.net+n.entretien+n.piscine+n.assurance;
+  var tax=n.prix*n.taxe/100;
+  var net=gross-mgmt-clean-charges-tax;
+  var fees=n.prix*n.frais/100;
+  var cost=n.prix+fees;
+  var loan=Math.max(0,cost-n.apport);
+  var pay=mensualite(loan,n.taux,n.duree_pret);
+  var cf=net-pay*12;
+  var A=gross-mgmt-clean-charges;
+  var den=0.07*(1+n.frais/100)+n.taxe/100;
+  var maxP=A>0?A/den:null;
+  return{type:'villa',gross:gross,stays:stays,mgmt:mgmt,clean:clean,charges:charges,tax:tax,net:net,
+    grossYield:gross/n.prix,netYield:net/cost,fees:fees,cost:cost,loan:loan,pay:pay,cf:cf,
+    roe:n.apport>0?cf/n.apport:null,payback:(cf>0&&n.apport>0)?n.apport/cf:null,
+    maxP:maxP,offer:maxP,income:gross,metric:net/cost,prix:n.prix,apport:n.apport,occ:n.occ};
+}
+function compute(type,d){
+  var n=nums(d);
+  return type==='hotel'?calcHotel(n):calcVilla(n);
+}
+var QUESTIONS=[
+  {id:1,crit:true,txt:"Lettre de disponibilité d'eau valide (moins d'un an) ?",help:"Demande l'original et vérifie la date d'émission. Sans eau garantie, pas d'exploitation possible."},
+  {id:2,txt:"Le réseau d'eau accepte-t-il de nouveaux branchements ?",help:"Important si tu veux ajouter des chambres ou des équipements (piscine, restaurant)."},
+  {id:3,crit:true,txt:"Folio real sans hypothèque ni litige ?",help:"Fais sortir le folio real au Registro Nacional par ton avocat : propriétaire, hypothèques, annotations."},
+  {id:4,txt:"Plano catastrado conforme au terrain ?",help:"Le plan cadastral doit correspondre à ce que tu vois sur place : surface, limites, accès."},
+  {id:5,crit:true,txt:"Bien hors de la zone maritime des 200 m ?",help:"La zone maritime terrestre (Ley 6043) fait 200 m depuis la pleamar : 50 m de zone publique et 150 m de zone restreinte. Dedans, ce n'est pas de la pleine propriété classique."},
+  {id:6,txt:"Uso de suelo compatible avec l'activité ?",help:"L'usage du sol doit autoriser hôtellerie ou location courte durée. À demander à la municipalité."},
+  {id:7,txt:"Taxes municipales à jour ?",help:"Demande les certificats de paiement : taxes foncières et patentes."},
+  {id:8,crit:true,txt:"Chiffres prouvés par les déclarations d'impôts ?",help:"Les revenus annoncés doivent apparaître dans les déclarations fiscales. Sinon, ce ne sont que des promesses."},
+  {id:9,txt:"Inscription ICT et Hacienda à jour ?",help:"Déclaration touristique (ICT) et immatriculation fiscale (Hacienda) en règle."},
+  {id:10,hotel:true,txt:"Dettes sociales et ancienneté du personnel connues et chiffrées ?",help:"Le personnel garde son ancienneté en cas de vente : exige la liste et le montant du passif social."},
+  {id:11,hotel:true,txt:"Liste écrite de ce qui est inclus dans la vente ?",help:"Mobilier, matériel, véhicules, marque, site web, comptes réseaux : tout par écrit."}
+];
+function questionsFor(type){return QUESTIONS.filter(function(q){return !q.hotel||type==='hotel'})}
+var ANS={oui:'Oui',non:'Non',jsp:'Je ne sais pas'};
+function verdict(type,res,d,ans){
+  var reds=[],oranges=[],pts=[],i,q,a;
+  var m=r2(res.metric*100);
+  var n=nums(d);
+  var qs=questionsFor(type);
+  for(i=0;i<qs.length;i++){
+    q=qs[i];a=ans['q'+q.id];
+    if(a==='oui')continue;
+    var label=ANS[a]||'Pas de réponse';
+    var t='Q'+q.id+' · '+q.txt+' → '+label;
+    if(q.crit){reds.push(t);pts.push({sev:'red',text:t})}
+    else{oranges.push(t);pts.push({sev:'orange',text:t})}
+  }
+  var t2;
+  if(type==='hotel'){
+    if(m<8){t2='Cap rate de '+m.toFixed(2).replace('.',',')+' % : sous 8 %, le prix demandé est trop haut.';reds.push(t2);pts.push({sev:'red',text:t2})}
+    else if(m<10){t2='Cap rate de '+m.toFixed(2).replace('.',',')+' % : entre 8 et 10 %, il faut négocier.';oranges.push(t2);pts.push({sev:'orange',text:t2})}
+    else if(m>12){t2='Cap rate de '+m.toFixed(2).replace('.',',')+' % : supérieur à 12 %, trop beau pour être vrai, à vérifier chiffre par chiffre.';oranges.push(t2);pts.push({sev:'orange',text:t2})}
+  }else{
+    if(m<5){t2='Rendement net de '+m.toFixed(2).replace('.',',')+' % : sous 5 %, ça ne vaut pas le risque.';reds.push(t2);pts.push({sev:'red',text:t2})}
+    else if(m<7){t2='Rendement net de '+m.toFixed(2).replace('.',',')+' % : entre 5 et 7 %, il faut négocier.';oranges.push(t2);pts.push({sev:'orange',text:t2})}
+    else if(m>12){t2='Rendement net de '+m.toFixed(2).replace('.',',')+' % : très élevé, vérifie que l\'occupation et les prix sont réalistes.';pts.push({sev:'orange',text:t2})}
+  }
+  if(n.occ>55){t2="Occupation saisie de "+String(n.occ).replace('.',',')+" % : au-dessus de 55 %, à prouver avec les réservations et les déclarations.";oranges.push(t2);pts.push({sev:'orange',text:t2})}
+  var level=reds.length?'red':(oranges.length?'orange':'green');
+  return{level:level,reds:reds,oranges:oranges,points:pts};
+}
+/* ==== CORE END ==== */
+
+/* ===================== UI ===================== */
+var app=document.getElementById('app');
+var S={view:'home',type:null,step:0,d:{},a:{},id:null,sel:[]};
+var KEY='dealchecker.v1',mem=[],storageOK=true;
+
+function loadAll(){
+  try{var r=localStorage.getItem(KEY);var v=r?JSON.parse(r):[];mem=Array.isArray(v)?v:[];return mem}
+  catch(e){storageOK=false;return mem}
+}
+function writeAll(list){
+  mem=list;
+  try{localStorage.setItem(KEY,JSON.stringify(list));return true}
+  catch(e){storageOK=false;return false}
+}
+function esc(s){return String(s==null?'':s).replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]})}
+function fmt$(n){return(n===null||n===undefined||!isFinite(n))?'—':Math.round(n).toLocaleString('fr-FR')+'\u00a0$'}
+function fmtPct(n){return(n===null||n===undefined||!isFinite(n))?'—':(n*100).toFixed(2).replace('.',',')+' %'}
+function fmtYears(n){return(n===null||n===undefined||!isFinite(n))?'jamais au rythme actuel':n.toFixed(1).replace('.',',')+' ans'}
+function fmtNum(n){return String(n).replace('.',',')}
+
+function F(k,label,suf,o){o=o||{};return{k:k,label:label,suf:suf,min:o.min,max:o.max,def:o.def,req:o.req!==false,int:o.int,hint:o.hint,when:o.when,ph:o.ph}}
+function buildSteps(type){
+  var H=type==='hotel',s=[];
+  s.push({id:'name',title:'Comment s\'appelle ce bien ?',help:'Un nom court pour le retrouver dans tes biens sauvegardés.',custom:'name'});
+  s.push({title:'Prix demandé',help:'Le prix affiché par le vendeur, hors frais d\'achat.',fields:[F('prix','Prix demandé','$',{min:1})]});
+  s.push({title:'Nombre de chambres',help:H?'Chambres réellement exploitables à la vente.':'Information pour ta fiche : le prix par nuit ci-dessous concerne le bien entier.',fields:[F('chambres','Nombre de chambres','',{min:1,int:true})]});
+  s.push({title:'Prix moyen par nuit',help:H?'Moyenne réelle sur l\'année (haute ET basse saison), hors TVA. Pas le tarif de pleine saison.':'Prix moyen par nuit pour le bien entier, hors TVA, sur toute l\'année (haute ET basse saison).',fields:[F('adr','Prix moyen par nuit hors TVA','$',{min:1})]});
+  s.push({title:'Taux d\'occupation',help:'Part des nuits réellement vendues sur l\'année. 40 % par défaut. Au-dessus de 55 %, le verdict passe à ORANGE.',fields:[F('occ','Taux d\'occupation','%',{min:0,max:100,def:'40'})],warnOcc:true});
+  if(H){
+    s.push({title:'Autres revenus annuels',help:'Restaurant, surf, excursions, spa… par an. Mets 0 s\'il n\'y en a pas.',fields:[F('autres','Autres revenus annuels','$',{min:0,def:'0'})]});
+    s.push({title:'Charges d\'exploitation',help:'Personnel, énergie, entretien, marketing, assurances… Choisis ton mode de saisie. 55 % du chiffre d\'affaires par défaut.',toggle:true,fields:[
+      F('chPct','Charges en % du chiffre d\'affaires','%',{min:0,max:100,def:'55',when:function(d){return d.chMode!=='usd'}}),
+      F('chUsd','Charges annuelles en dollars','$',{min:0,when:function(d){return d.chMode==='usd'}})]});
+    s.push({title:'Réserve mobilier et équipement',help:'Argent à mettre de côté chaque année pour remplacer matelas, climatisation, linge… 4 % du chiffre d\'affaires par défaut.',fields:[F('reserve','Réserve mobilier et équipement','% du CA',{min:0,max:100,def:'4'})]});
+    s.push({title:'Travaux à prévoir',help:'Budget des travaux à faire après l\'achat. Mets 0 s\'il n\'y en a pas. Ils sont ajoutés au coût total et financés par le prêt.',fields:[F('travaux','Travaux à prévoir','$',{min:0,def:'0'})]});
+  }else{
+    s.push({title:'Frais de gestion',help:'Part du revenu payée à la conciergerie. Mets 0 si tu gères toi-même.',fields:[F('gestion','Frais de gestion','% du revenu',{min:0,max:100})]});
+    s.push({title:'Ménage par séjour',help:'Ce que te coûte un ménage complet entre deux séjours. Si tu le factures au voyageur, mets 0.',fields:[F('menage','Ménage par séjour','$',{min:0})]});
+    s.push({title:'Durée moyenne de séjour',help:'Nombre de nuits par réservation. Plus c\'est court, plus tu paies de ménages.',fields:[F('duree','Durée moyenne de séjour','nuits',{min:1})]});
+    s.push({title:'Charges annuelles',help:'Total par an pour chaque poste. Mets 0 pour un poste qui ne s\'applique pas.',fields:[
+      F('elec','Électricité','$ / an',{min:0}),F('eau','Eau','$ / an',{min:0}),F('net','Internet','$ / an',{min:0}),
+      F('entretien','Entretien','$ / an',{min:0}),F('piscine','Piscine','$ / an',{min:0}),F('assurance','Assurance','$ / an',{min:0})]});
+    s.push({title:'Taxe foncière',help:'0,25 % par an par défaut (Ley 7509, article 23). Elle s\'applique en réalité sur la valeur enregistrée au fisc, souvent inférieure au prix de vente : ici on prend le prix, donc la prudence.',fields:[F('taxe','Taxe foncière','% du prix',{min:0,max:5,def:'0.25'})]});
+  }
+  s.push({title:'Frais d\'achat',help:'Notaire, enregistrement, avocat, impôts de transfert. 4 % du prix par défaut.',fields:[F('frais','Frais d\'achat','% du prix',{min:0,max:30,def:'4'})]});
+  s.push({title:'Apport personnel',help:'L\'argent que tu mets de ta poche. S\'il couvre tout le coût, il n\'y a pas de prêt.',fields:[F('apport','Apport personnel','$',{min:0})]});
+  s.push({title:'Le prêt',help:'Taux annuel et durée. Obligatoires uniquement si tu empruntes. Sinon laisse vide.',loan:true,fields:[
+    F('taux','Taux du prêt','% par an',{min:0,max:50,req:false}),
+    F(H?'duree':'duree_pret','Durée du prêt','ans',{min:1,max:50,req:false})]});
+  questionsFor(type).forEach(function(q){s.push({title:'Q'+q.id+' · '+q.txt,help:q.help,yn:q.id})});
+  return s;
+}
+function defaults(type){
+  var d={name:''},st=buildSteps(type);
+  st.forEach(function(s){(s.fields||[]).forEach(function(f){d[f.k]=f.def!==undefined?f.def:''})});
+  if(type==='hotel')d.chMode='pct';
+  return d;
+}
+function visible(step,d){return(step.fields||[]).filter(function(f){return!f.when||f.when(d)})}
+
+function validate(step){
+  var d=S.d,err=null;
+  if(step.custom==='name'){if(!String(d.name||'').trim())return'Donne un nom au bien.';return null}
+  var fs=visible(step,d);
+  for(var i=0;i<fs.length;i++){
+    var f=fs[i],raw=d[f.k],v=num(raw);
+    if(v===null){if(f.req)return'Remplis « '+f.label+' ».';continue}
+    if(isNaN(v))return'« '+f.label+' » doit être un nombre.';
+    if(f.min!==undefined&&v<f.min)return'« '+f.label+' » doit être au moins '+fmtNum(f.min)+'.';
+    if(f.max!==undefined&&v>f.max)return'« '+f.label+' » ne peut pas dépasser '+fmtNum(f.max)+'.';
+    if(f.int&&Math.floor(v)!==v)return'« '+f.label+' » doit être un nombre entier.';
+  }
+  if(step.loan){
+    var r=compute(S.type,S.d);
+    if(r.loan>0){
+      var n=nums(S.d),dk=S.type==='hotel'?'duree':'duree_pret';
+      if(num(S.d.taux)===null)return'Tu empruntes '+fmt$(r.loan)+' : indique le taux du prêt (0 si prêt sans intérêt).';
+      if(!(n[dk]>0))return'Tu empruntes '+fmt$(r.loan)+' : indique la durée du prêt.';
+    }
+  }
+  return err;
+}
+
+/* ---------- vues ---------- */
+function viewHome(){
+  var n=loadAll().length;
+  return'<h1>Deal Checker<br>Costa Rica</h1>'+
+  '<p class="mut">Avant d\'offrir un dollar, vérifie si le deal tient la route. 3 minutes, des chiffres, un verdict.</p>'+
+  '<h3>Quel type de bien ?</h3>'+
+  '<div class="yn"><button class="btn big" data-act="start" data-type="hotel">🏨 Hôtel<small>Chambres, restaurant, personnel</small></button>'+
+  '<button class="btn big" data-act="start" data-type="villa">🏡 Villa / appartement Airbnb<small>Location courte durée</small></button></div>'+
+  (n?'<h3>Tes biens</h3><button class="btn" data-act="saved">📁 Mes biens sauvegardés / Comparer ('+n+')</button>':'')+
+  '<p class="disc">Outil d\'aide à la décision, pas un avis juridique ni fiscal. Fais valider chaque point par un avocat local avant toute promesse de vente.</p>';
+}
+function topbar(i,total){
+  return'<div class="top noprint"><button class="back" data-act="back" aria-label="Retour">←</button><div class="prog"><div class="lbl">Étape '+(i+1)+' sur '+total+'</div><div class="bar"><i style="width:'+Math.round((i+1)/total*100)+'%"></i></div></div></div>';
+}
+function viewStep(){
+  var st=buildSteps(S.type),step=st[S.step],h=topbar(S.step,st.length);
+  h+='<h2>'+esc(step.title)+'</h2><p class="mut">'+esc(step.help)+'</p>';
+  if(step.custom==='name'){
+    h+='<div class="field"><div class="inp"><input id="f_name" data-k="name" type="text" maxlength="60" autocomplete="off" enterkeyhint="next" placeholder="ex. Hôtel Playa Blanca" value="'+esc(S.d.name)+'"></div></div>';
+  }else if(step.yn){
+    var cur=S.a['q'+step.yn];
+    h+='<div class="yn">'+['oui','non','jsp'].map(function(k){return'<button class="btn'+(cur===k?' on':'')+'" data-act="ans" data-v="'+k+'">'+ANS[k]+'</button>'}).join('')+'</div>';
+  }else{
+    if(step.toggle)h+='<div class="seg"><button class="'+(S.d.chMode!=='usd'?'on':'')+'" data-act="chMode" data-v="pct">% du CA</button><button class="'+(S.d.chMode==='usd'?'on':'')+'" data-act="chMode" data-v="usd">$ par an</button></div>';
+    visible(step,S.d).forEach(function(f,i){
+      h+='<div class="field"><label for="f_'+f.k+'">'+esc(f.label)+'</label><div class="inp"><input id="f_'+f.k+'" data-k="'+f.k+'" type="text" inputmode="decimal" autocomplete="off" enterkeyhint="next" value="'+esc(S.d[f.k])+'"'+(f.ph?' placeholder="'+esc(f.ph)+'"':'')+'>'+(f.suf?'<span>'+esc(f.suf)+'</span>':'')+'</div></div>';
+    });
+    if(step.warnOcc)h+='<div id="occw" class="warnbox" style="display:none">Au-dessus de 55 % : le verdict passe à ORANGE. Il faudra le prouver avec les réservations et les déclarations d\'impôts.</div>';
+  }
+  h+='<div class="err" id="err" role="alert"></div>';
+  if(!step.yn)h+='<button class="btn pri" data-act="next">Continuer</button>';
+  return h;
+}
+function resultHtml(type,d,a,forPrint){
+  var res=compute(type,d),v=verdict(type,res,d,a),H=type==='hotel',h='';
+  var title={red:'ROUGE',orange:'ORANGE',green:'VERT'}[v.level];
+  var sub={red:'Ne pas avancer en l\'état.',orange:'À vérifier avant toute offre.',green:'Feu vert, sous réserve de ton avocat.'}[v.level];
+  h+='<div class="printhead"><h1>Deal Checker Costa Rica · Fiche</h1><p>'+esc(d.name)+' — '+(H?'Hôtel':'Villa / appartement')+' — '+new Date().toLocaleDateString('fr-FR')+'</p></div>';
+  h+='<h2 class="noprint">'+esc(d.name)+'</h2><p class="mut noprint">'+(H?'Hôtel':'Villa / appartement Airbnb')+'</p>';
+  h+='<div class="verdict '+v.level+'"><div class="lvl">'+title+'</div><div class="sub">'+sub+'</div></div>';
+  h+='<div class="card"><h3 style="margin-top:0">Points à vérifier</h3>';
+  h+=v.points.length?'<ul class="pts">'+v.points.map(function(p){return'<li class="'+p.sev+'">'+esc(p.text)+'</li>'}).join('')+'</ul>':'<p>Aucun point bloquant. Fais quand même tout valider par écrit.</p>';
+  h+='</div>';
+  var off=res.offer;
+  h+='<div class="card offer"><div class="mut small">Prix d\'offre conseillé ('+(H?'10 % de cap rate':'7 % de rendement net')+')</div>';
+  if(off!==null&&off>0){
+    var gap=(off-res.prix)/res.prix;
+    h+='<div class="v">'+fmt$(off)+'</div><p class="small mut">Prix demandé : '+fmt$(res.prix)+' · '+(gap<0?'soit '+(Math.abs(gap)*100).toFixed(1).replace('.',',')+' % de moins que le prix demandé.':'le prix demandé est déjà en dessous : ne pars pas de plus haut que ça.')+'</p>';
+  }else h+='<div class="v">—</div><p class="small mut">Avec ces charges, le bien ne dégage aucun résultat positif : aucun prix ne le rend rentable.</p>';
+  h+='</div>';
+  function ind(k,val,ex){return'<div class="ind"><div class="k"><b>'+k+'</b><span class="val">'+val+'</span></div><div class="ex">'+ex+'</div></div>'}
+  h+='<div class="card"><h3 style="margin-top:0">Les chiffres</h3>';
+  if(H){
+    h+=ind("Chiffre d'affaires annuel",fmt$(res.rev),"Tout ce que l'hôtel encaisse en un an, hors TVA.")+
+    ind('RevPAR',fmt$(res.revpar),"Revenu moyen par chambre disponible et par nuit (prix × occupation) : le meilleur thermomètre pour comparer deux hôtels.")+
+    ind("Résultat net d'exploitation",fmt$(res.noi),"Ce qu'il reste après les charges et la réserve de remplacement, avant le prêt.")+
+    ind('Cap rate',fmtPct(res.cap),"Résultat net divisé par le prix demandé : le rendement du bien si tu l'achetais cash.")+
+    ind('Prix max justifié à 10 %',fmt$(res.max10),"Le prix à ne pas dépasser pour obtenir 10 % de cap rate.")+
+    ind('Prix max justifié à 12 %',fmt$(res.max12),"Le prix pour 12 % : le scénario prudent si les chiffres du vendeur sont optimistes.")+
+    ind('Mensualité du prêt',fmt$(res.pay),"Ce que tu rembourses chaque mois à la banque ("+fmt$(res.loan)+" empruntés).")+
+    ind('Cash-flow annuel après prêt',fmt$(res.cf),"Ce qu'il te reste en poche chaque année une fois le prêt payé. Négatif = tu dois remettre de l'argent.")+
+    ind('Retour sur apport',fmtPct(res.roe),"Cash-flow annuel divisé par ton apport : ce que rapporte chaque dollar que tu mets.")+
+    ind("Années pour récupérer l'apport",fmtYears(res.payback),"Combien d'années de cash-flow pour retrouver ta mise de départ.");
+  }else{
+    h+=ind('Revenu brut annuel',fmt$(res.gross),"Ce que la villa encaisse en un an avant toute charge (nuits vendues × prix).")+
+    ind('Rendement brut',fmtPct(res.grossYield),"Revenu brut divisé par le prix demandé. Flatteur, mais il ignore les charges.")+
+    ind('Rendement net',fmtPct(res.netYield),"Ce qu'il reste après gestion, ménages, charges et taxe foncière, divisé par prix + frais d'achat : le vrai rendement.")+
+    ind('Cash-flow annuel après prêt',fmt$(res.cf),"Ce qu'il te reste chaque année une fois le prêt payé ("+fmt$(res.pay)+" par mois). Négatif = tu complètes de ta poche.")+
+    ind('Retour sur apport',fmtPct(res.roe),"Cash-flow annuel divisé par ton apport : ce que rapporte chaque dollar que tu mets.")+
+    ind('Prix maximum pour 7 % net',fmt$(res.maxP),"Le prix le plus haut qui te donne 7 % de rendement net avec ces revenus et ces charges.");
+  }
+  h+='</div>';
+  h+='<div class="recap card"><h3 style="margin-top:0">Données saisies</h3>'+recapTable(type,d,a)+'<p class="disc">Outil d\'aide à la décision, pas un avis juridique ni fiscal. Chiffres calculés à partir des données saisies, non vérifiés.</p></div>';
+  return h;
+}
+function recapTable(type,d,a){
+  var rows=[['Nom',esc(d.name)]];
+  buildSteps(type).forEach(function(s){
+    visible(s,d).forEach(function(f){
+      var val=d[f.k];if(val===''||val===undefined)val='—';
+      rows.push([esc(f.label),esc(val)+(f.suf&&val!=='—'?' '+esc(f.suf):'')]);
+    });
+  });
+  if(type==='hotel')rows.splice(1,0,['Mode de saisie des charges',d.chMode==='usd'?'$ par an':'% du CA']);
+  questionsFor(type).forEach(function(q){rows.push(['Q'+q.id+' · '+esc(q.txt),ANS[a['q'+q.id]]||'—'])});
+  return'<table>'+rows.map(function(r){return'<tr><td>'+r[0]+'</td><td>'+r[1]+'</td></tr>'}).join('')+'</table>';
+}
+function viewResult(){
+  var h='<div class="top noprint"><button class="back" data-act="home" aria-label="Accueil">⌂</button><div class="prog"><div class="lbl">Résultat</div></div></div>';
+  h+=resultHtml(S.type,S.d,S.a);
+  h+='<div class="noprint"><div class="row"><button class="btn pri" data-act="save">💾 Sauvegarder</button><button class="btn" data-act="print">🖨 Imprimer / PDF</button></div>'+
+  '<div class="row" style="margin-top:10px"><button class="btn ghost" data-act="edit">✏️ Modifier les réponses</button><button class="btn ghost" data-act="saved">📁 Mes biens / Comparer</button></div>'+
+  (storageOK?'':'<div class="warnbox">Sauvegarde du navigateur indisponible (navigation privée ?) : la fiche reste en mémoire tant que la page est ouverte.</div>')+'</div>';
+  return h;
+}
+function viewSaved(){
+  var list=loadAll(),h='<div class="top noprint"><button class="back" data-act="home" aria-label="Accueil">⌂</button><div class="prog"><div class="lbl">Mes biens sauvegardés</div></div></div>';
+  h+='<h2>Mes biens</h2><p class="mut">Coche 2 ou 3 biens pour les comparer côte à côte.</p>';
+  if(!storageOK)h+='<div class="warnbox">Sauvegarde du navigateur indisponible : les biens restent en mémoire tant que la page est ouverte.</div>';
+  if(!list.length)h+='<div class="card">Aucun bien sauvegardé pour l\'instant.</div>';
+  list.forEach(function(it){
+    var res=compute(it.type,it.d),v=verdict(it.type,res,it.d,it.a);
+    var on=S.sel.indexOf(it.id)>=0;
+    h+='<div class="card"><div class="item"><input class="chk" type="checkbox" data-act="toggleSel" data-id="'+it.id+'"'+(on?' checked':'')+' aria-label="Comparer"><div class="grow"><b>'+esc(it.d.name)+'</b><span class="small mut"><span class="dot '+v.level+'"></span>'+(it.type==='hotel'?'Hôtel':'Villa')+' · '+fmt$(res.prix)+' · '+(it.type==='hotel'?'cap rate ':'net ')+fmtPct(res.metric)+'</span></div></div>'+
+    '<div class="row" style="margin-top:10px"><button class="btn sm" data-act="open" data-id="'+it.id+'">Ouvrir</button><button class="btn sm danger" data-act="del" data-id="'+it.id+'">Supprimer</button></div></div>';
+  });
+  h+='<button class="btn pri" data-act="compare"'+(S.sel.length<2?' disabled style="opacity:.5"':'')+'>Comparer ('+S.sel.length+'/3)</button>';
+  h+='<div style="margin-top:10px"><button class="btn ghost" data-act="home">+ Analyser un nouveau bien</button></div>';
+  return h;
+}
+function viewCompare(){
+  var list=loadAll().filter(function(it){return S.sel.indexOf(it.id)>=0});
+  var items=list.map(function(it){var r=compute(it.type,it.d);return{it:it,r:r,v:verdict(it.type,r,it.d,it.a)}});
+  var h='<div class="top noprint"><button class="back" data-act="saved" aria-label="Retour">←</button><div class="prog"><div class="lbl">Comparaison</div></div></div>';
+  h+='<div class="printhead"><h1>Deal Checker Costa Rica · Comparaison</h1><p>'+new Date().toLocaleDateString('fr-FR')+'</p></div><h2 class="noprint">Comparaison</h2>';
+  function row(label,fn){return'<tr><td>'+label+'</td>'+items.map(function(x){return'<td>'+fn(x)+'</td>'}).join('')+'</tr>'}
+  var vl={red:'ROUGE',orange:'ORANGE',green:'VERT'};
+  h+='<div class="tbl"><table><thead><tr><th></th>'+items.map(function(x){return'<th>'+esc(x.it.d.name)+'</th>'}).join('')+'</tr></thead><tbody>'+
+  row('Verdict',function(x){return'<span class="tag '+x.v.level+'">'+vl[x.v.level]+'</span>'})+
+  row('Type',function(x){return x.it.type==='hotel'?'Hôtel':'Villa'})+
+  row('Prix demandé',function(x){return fmt$(x.r.prix)})+
+  row('Revenu annuel',function(x){return fmt$(x.r.income)})+
+  row('Résultat net annuel',function(x){return fmt$(x.r.net)})+
+  row('Cap rate (hôtel)',function(x){return x.it.type==='hotel'?fmtPct(x.r.cap):'—'})+
+  row('Rendement net (villa)',function(x){return x.it.type==='villa'?fmtPct(x.r.netYield):'—'})+
+  row('Rendement brut (villa)',function(x){return x.it.type==='villa'?fmtPct(x.r.grossYield):'—'})+
+  row('RevPAR (hôtel)',function(x){return x.it.type==='hotel'?fmt$(x.r.revpar):'—'})+
+  row('Mensualité',function(x){return fmt$(x.r.pay)})+
+  row('Cash-flow annuel',function(x){return fmt$(x.r.cf)})+
+  row('Apport',function(x){return fmt$(x.r.apport)})+
+  row('Retour sur apport',function(x){return fmtPct(x.r.roe)})+
+  row('Années pour récupérer l\'apport',function(x){return x.r.payback===null?'jamais':x.r.payback.toFixed(1).replace('.',',')+' ans'})+
+  row('Prix d\'offre conseillé',function(x){return fmt$(x.r.offer)})+
+  row('Points à vérifier',function(x){return x.v.points.length})+
+  '</tbody></table></div>';
+  h+='<div class="noprint" style="margin-top:14px"><button class="btn pri" data-act="print">🖨 Imprimer / PDF</button></div>';
+  h+='<p class="disc">Outil d\'aide à la décision, pas un avis juridique ni fiscal.</p>';
+  return h;
+}
+function render(){
+  var v=S.view,h='';
+  if(v==='home')h=viewHome();
+  else if(v==='step')h=viewStep();
+  else if(v==='result')h=viewResult();
+  else if(v==='saved')h=viewSaved();
+  else if(v==='compare')h=viewCompare();
+  app.innerHTML=h;
+  window.scrollTo(0,0);
+  if(v==='step'){
+    var f=app.querySelector('input[data-k]');
+    if(f)try{f.focus()}catch(e){}
+    checkOcc();
+  }
+}
+function checkOcc(){
+  var w=document.getElementById('occw');if(!w)return;
+  var v=num(S.d.occ);w.style.display=(v!==null&&v>55)?'block':'none';
+}
+function toast(msg){
+  var t=document.createElement('div');t.className='toast';t.textContent=msg;document.body.appendChild(t);
+  setTimeout(function(){if(t.parentNode)t.parentNode.removeChild(t)},2600);
+}
+function goNext(){
+  var st=buildSteps(S.type);
+  if(S.step<st.length-1){S.step++;render()}else{S.view='result';render()}
+}
+function act(a,ds){
+  if(a==='start'){S={view:'step',type:ds.type,step:0,d:defaults(ds.type),a:{},id:null,sel:S.sel};render()}
+  else if(a==='back'){
+    if(S.step>0){S.step--;render()}else{S.view='home';render()}
+  }
+  else if(a==='next'){
+    var st=buildSteps(S.type),e=validate(st[S.step]);
+    if(e){var el=document.getElementById('err');if(el)el.textContent=e;return}
+    goNext();
+  }
+  else if(a==='ans'){
+    var st2=buildSteps(S.type),q=st2[S.step].yn;
+    S.a['q'+q]=ds.v;render();
+    setTimeout(function(){if(S.view==='step'&&buildSteps(S.type)[S.step].yn===q)goNext()},180);
+  }
+  else if(a==='chMode'){S.d.chMode=ds.v;render()}
+  else if(a==='home'){S.view='home';render()}
+  else if(a==='edit'){S.view='step';S.step=0;render()}
+  else if(a==='save'){
+    var list=loadAll().slice(),rec={id:S.id||(Date.now().toString(36)+Math.random().toString(36).slice(2,6)),name:S.d.name,type:S.type,d:S.d,a:S.a,savedAt:Date.now()};
+    var idx=-1;list.forEach(function(x,i){if(x.id===rec.id)idx=i});
+    if(idx>=0)list[idx]=rec;else list.unshift(rec);
+    S.id=rec.id;
+    var ok=writeAll(list);
+    toast(ok?'Bien sauvegardé : '+rec.name:'Sauvegarde navigateur indisponible : gardé en mémoire seulement.');
+  }
+  else if(a==='print'){try{window.print()}catch(e){toast('Impression impossible ici.')}}
+  else if(a==='saved'){S.view='saved';render()}
+  else if(a==='open'){
+    var it=loadAll().filter(function(x){return x.id===ds.id})[0];
+    if(it){S={view:'result',type:it.type,step:0,d:JSON.parse(JSON.stringify(it.d)),a:JSON.parse(JSON.stringify(it.a)),id:it.id,sel:S.sel};render()}
+  }
+  else if(a==='del'){
+    if(window.confirm('Supprimer ce bien ?')){
+      writeAll(loadAll().filter(function(x){return x.id!==ds.id}));
+      S.sel=S.sel.filter(function(x){return x!==ds.id});render();
+    }
+  }
+  else if(a==='compare'){if(S.sel.length>=2){S.view='compare';render()}}
+}
+app.addEventListener('click',function(e){
+  var b=e.target.closest('[data-act]');if(!b)return;
+  if(b.dataset.act==='toggleSel')return;
+  if(b.disabled)return;
+  act(b.dataset.act,b.dataset);
+});
+app.addEventListener('change',function(e){
+  var el=e.target;
+  if(el.dataset&&el.dataset.act==='toggleSel'){
+    var i=S.sel.indexOf(el.dataset.id);
+    if(el.checked){
+      if(S.sel.length>=3){el.checked=false;toast('3 biens maximum.');return}
+      if(i<0)S.sel.push(el.dataset.id);
+    }else if(i>=0)S.sel.splice(i,1);
+    var cb=document.querySelector('[data-act=compare]');
+    if(cb){cb.textContent='Comparer ('+S.sel.length+'/3)';cb.disabled=S.sel.length<2;cb.style.opacity=S.sel.length<2?'.5':''}
+  }
+});
+app.addEventListener('input',function(e){
+  var el=e.target;
+  if(el.dataset&&el.dataset.k){
+    S.d[el.dataset.k]=el.value;
+    var er=document.getElementById('err');if(er)er.textContent='';
+    if(el.dataset.k==='occ')checkOcc();
+  }
+});
+app.addEventListener('keydown',function(e){
+  if(e.key==='Enter'&&e.target.dataset&&e.target.dataset.k){e.preventDefault();act('next',{})}
+});
+render();
+</script>
+</body>
+</html>
